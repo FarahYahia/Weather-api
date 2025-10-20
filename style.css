@@ -1,0 +1,328 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: "Alkatra", system-ui;
+  display: flex;
+  flex-direction: column;
+  background-color: #0000001a;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+header {
+  display: flex;
+  margin: 0;
+  text-align: center;
+  position: static;
+  flex-direction: row;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  transition: background-color 0.3s;
+  backdrop-filter: blur(2px);
+  width: 100%;
+  height: auto;
+  min-height: 50px;
+}
+.left-header {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+header .logo {
+  height: 13vh;
+  width: 100%;
+  /* margin: 0 auto; */
+  /* position: absolute; */
+  /* top: 2%;
+  left: 5%; */
+  color: white;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.search-container {
+  justify-content: center;
+  display: flex;
+  margin: 1.5% 0;
+  position: relative;
+  width: 40%;
+  /* background-color: antiquewhite; */
+}
+.right-header {
+  width: 30%;
+}
+.weather-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -99;
+}
+.weather-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+.search-container #city-input {
+  background-color: transparent;
+  background-color: #ffffff34;
+  backdrop-filter: blur(8px);
+  border: solid 0.5px #000000;
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 50px;
+  width: 100%;
+  height: 4vh;
+  text-align: center;
+  justify-content: center;
+}
+::placeholder {
+  color: rgb(0, 0, 0);
+  opacity: 1;
+}
+
+.search-container #search-btn {
+  border-radius: 50px;
+  backdrop-filter: blur(8px);
+  border: solid 0.5px #000000;
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
+  height: 4vh;
+  width: 2vw;
+  margin-left: 5px;
+  cursor: pointer;
+  background-color: transparent;
+  position: absolute;
+  right: 0;
+  margin: auto;
+}
+.search-container #search-btn :hover {
+  background-color: #d3d3d3;
+}
+.weather-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 60vh;
+  padding: 1.5% 5%;
+  box-sizing: border-box;
+}
+.prayer,
+.hourly-weather {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  width: 20%;
+  height: 95%;
+  margin-top: 1%;
+  background-color: transparent;
+  background-color: #00000010;
+  backdrop-filter: blur(8px);
+  border: solid 0.1px #ffffff41;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 35px;
+  padding: 1% 2%;
+  color: white;
+  font-size: 1.7rem;
+}
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.weather-content .row {
+  gap: 20px;
+  justify-content: space-between;
+}
+.weather-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+
+  width: 60%;
+  height: 100%;
+  /* background-color: blueviolet; */
+  color: white;
+  padding: 2%;
+}
+.time,
+.city,
+.weather-temp,
+.apparent-temperature {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+.weather-temp {
+  flex-direction: column;
+}
+.current-weather-icon {
+  display: block;
+  margin: 0 auto;
+  width: 32%;
+  height: auto;
+  margin-top: 20px;
+}
+.city {
+  color: white;
+}
+.temp {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+}
+#temperature {
+  width: 100%;
+  text-align: center;
+}
+
+.daily-weather .icon {
+  width: 40%;
+  margin-top: 10px;
+}
+.hourly-weather .icon {
+  width: 32%;
+  max-height: 40px;
+}
+.hourly-weather .row canvas {
+  max-width: 88px;
+  text-align: right;
+}
+.hourly-weather .row div:nth-of-type(1) {
+  min-width: 70px;
+  text-align: right;
+}
+.hourly-weather .row div:nth-of-type(2) {
+  min-width: 90px;
+  text-align: right;
+}
+.time {
+  gap: 10px;
+  color: white;
+  font-size: 1.2rem;
+}
+.weather-details {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); */
+  color: white;
+  padding: 1% 10%;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-label {
+  color: rgb(238, 238, 238);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+#wind-value,
+#humidity-value,
+#pressure-value,
+#visibility-value {
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.daily-weather {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 90%;
+  flex-grow: 1;
+  align-self: stretch;
+  margin: 0 5%;
+  box-sizing: border-box;
+  bottom: 0;
+  flex: 1;
+  background-color: transparent;
+  background-color: #00000010;
+  backdrop-filter: blur(8px);
+  border: solid 0.1px #ffffff41;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  border-radius: 35px 35px 0 0;
+}
+.daily-weather .col {
+  /* border: solid 1px #202020; */
+  flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  color: white;
+  font-size: 1.4rem;
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 10px;
+  border-bottom: 0;
+}
+
+.daily-weather .col .date {
+  font-size: 1.2rem;
+  color: #ebebeb;
+}
+
+.today {
+  width: 100%;
+}
+.today-line {
+  border: 0;
+  height: 1.2px;
+  background: #ffd700;
+  background-image: linear-gradient(to right, #00000088, #ffd700, #00000088);
+}

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Alkatra:wght@500&family=Boogaloo&family=Kalam:wght@300;400;700&family=Playwrite+AU+VIC&family=Sansita+Swashed:wght@300&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.com/npm/@basmilius/weather-icons@3.0.0/production/line/all.css"
+    />
+    <script src="https://darkskyapp.github.io/skycons/skycons.js"></script>
+
+    <title>Weather app</title>
+  </head>
+  <body>
+    <div class="weather-background">
+      <img src="img/wallpaper3.jpg" class="sunny-img" />
+    </div>
+    <header>
+      <div class="left-header">
+        <a href="index.html">
+          <!-- <img
+            src="img/LOGO-2.png"
+            alt="Logo by lifeoffai from FC Chaudhary"
+            class="logo"
+          /> -->
+          <h3 class="logo">Weather.com</h3>
+        </a>
+      </div>
+      <div class="search-container">
+        <input type="text" id="city-input" placeholder="Search a City" />
+        <button id="search-btn">
+          <i class="fas fa-search" style="font-size: 1.5rem"></i>
+        </button>
+      </div>
+      <div class="right-header"></div>
+    </header>
+    <!-- ------------------------------------------------------------------------------------------------ -->
+    <main class="weather-content">
+      <div class="prayer">
+        <h3 class="">Prayer Time</h3>
+
+        <div class="row" id="Fajr">
+          <div class="prayer-name">Fajr</div>
+          <div class="prayer-time">5:00am</div>
+        </div>
+        <div class="row" id="sunset">
+          <div class="prayer-name">Sunset</div>
+          <div class="prayer-time">6:00am</div>
+        </div>
+        <div class="row" id="sunset">
+          <div class="prayer-name">Sunset</div>
+          <div class="prayer-time">6:00am</div>
+        </div>
+        <div class="row" id="sunset">
+          <div class="prayer-name">Sunset</div>
+          <div class="prayer-time">6:00am</div>
+        </div>
+        <div class="row" id="sunset">
+          <div class="prayer-name">Sunset</div>
+          <div class="prayer-time">6:00am</div>
+        </div>
+        <div class="row" id="sunset">
+          <div class="prayer-name">Sunset</div>
+          <div class="prayer-time">6:00am</div>
+        </div>
+      </div>
+
+      <div class="weather-display">
+        <div class="city" style="font-size: 1.5rem">
+          <i
+            class="fas fa-map-marker-alt"
+            style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"
+          ></i>
+          Riyadh
+          <!-- here is city name  -->
+        </div>
+        <div class="time">
+          <div class="datetime" id="datetime">
+            <!-- here is the date and time -->
+          </div>
+        </div>
+        <div class="weather-temp">
+          <canvas
+            class="current-weather-icon"
+            id="current-weather-icon"
+          ></canvas>
+          <div
+            id="temperature"
+            style="font-size: 5rem; font-weight: 600; text-align: center"
+          ></div>
+        </div>
+        <div class="apparent-temperature">
+          Feels like
+          <div
+            id="apparent-value"
+            style="margin-left: 5px; font-size: 1.7rem"
+          ></div>
+        </div>
+
+        <div class="weather-details">
+          <div class="detail-item">
+            <div class="detail-label">Wind speed</div>
+            <div id="wind-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Air Humidity</div>
+            <div id="humidity-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Pressure</div>
+            <div id="pressure-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Visibility</div>
+            <div id="visibility-value"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hourly-weather">
+        <h3 class="">Today's Weather</h3>
+
+        <div class="row">
+          <canvas class="icon" id="hourly-icon0"></canvas>
+          <div id="time-0"></div>
+          <div id="temp-0"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon1"></canvas>
+          <div id="time-1"></div>
+          <div id="temp-1"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon2"></canvas>
+          <div id="time-2"></div>
+          <div id="temp-2"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon3"></canvas>
+          <div id="time-3"></div>
+          <div id="temp-3"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon4"></canvas>
+          <div id="time-4"></div>
+          <div id="temp-4"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon5"></canvas>
+          <div id="time-5"></div>
+          <div id="temp-5"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon6"></canvas>
+          <div id="time-6"></div>
+          <div id="temp-6"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon7"></canvas>
+          <div id="time-7"></div>
+          <div id="temp-7"></div>
+        </div>
+      </div>
+    </main>
+    <!-- ------------------------------------------------------------------------------------------------ -->
+    <div class="daily-weather">
+      <!-- 2 days ago -->
+      <div class="col" id="day-1">
+        <div id="day1"></div>
+        <div id="date1"></div>
+        <canvas class="icon" id="weather-icon1"></canvas>
+        <div class="temp">
+          <div id="day-1-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-1-low"></div>
+        </div>
+        <!-- precipitation probability max -->
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm1"></div>
+        </div>
+      </div>
+      <!-- Yesterday -->
+      <div class="col" id="day-2">
+        <div id="day2"></div>
+        <div id="date2"></div>
+        <canvas class="icon" id="weather-icon2"></canvas>
+        <div class="temp">
+          <div id="day-2-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-2-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm2"></div>
+        </div>
+      </div>
+      <!-- today -->
+      <div class="col" id="today">
+        <div id="day3"></div>
+        <div id="date3"></div>
+        <canvas class="icon" id="weather-icon3"></canvas>
+        <div class="temp">
+          <div id="day-3-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-3-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm3"></div>
+        </div>
+      </div>
+      <!-- Tomorrow -->
+      <div class="col">
+        <div id="day4"></div>
+        <div id="date4"></div>
+        <canvas class="icon" id="weather-icon4"></canvas>
+        <div class="temp">
+          <div id="day-4-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-4-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm4"></div>
+        </div>
+      </div>
+      <!-- 2 Days Later -->
+      <div class="col">
+        <div id="day5"></div>
+        <div id="date5"></div>
+        <canvas class="icon" id="weather-icon5"></canvas>
+
+        <div class="temp">
+          <div id="day-5-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-5-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm5"></div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<!-- date
+location
+city search bar
+en/ar 
+prayer time
+-->
