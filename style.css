@@ -217,7 +217,7 @@ button {
 }
 
 .daily-weather .icon {
-  width: 40%;
+  width: 45%;
   margin-top: 10px;
 }
 .hourly-weather .icon {
@@ -308,7 +308,7 @@ button {
   font-size: 1.4rem;
   flex-grow: 1;
   flex-basis: 0;
-  padding: 10px;
+  padding: 1rem;
   border-bottom: 0;
 }
 
@@ -317,12 +317,22 @@ button {
   color: #ebebeb;
 }
 
-.today {
-  width: 100%;
+#today {
+  padding: 0.2rem 0 1rem 0;
 }
 .today-line {
   border: 0;
   height: 1.2px;
+  width: 100%;
+
   background: #ffd700;
   background-image: linear-gradient(to right, #00000088, #ffd700, #00000088);
+}
+.today {
+  color: #e9c70a;
+  font-size: 1.3rem;
+}
+.col .day,
+.col .date {
+  font-size: 1.6rem;
 }
