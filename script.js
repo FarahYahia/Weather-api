@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let i = 1; i <= 5; i++) {
           const dateData = data.daily.time[i];
           const date = new Date(dateData);
-          const day = date.toLocaleDateString("en-EG", { weekday: "Long" });
+          const day = date.toLocaleDateString("en-EG", { weekday: "long" });
           const shortDate = date.toLocaleDateString("en-EG", {
             month: "short",
             day: "numeric",
