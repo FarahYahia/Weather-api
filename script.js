@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const datetimeElement = document.getElementById("datetime");
+  var latitude = 0;
+  var longitude = 0;
+  var cityName = "";
 
   function updateDateTime() {
     const now = new Date();
@@ -18,47 +21,101 @@ document.addEventListener("DOMContentLoaded", function () {
   updateDateTime();
   setInterval(updateDateTime, 1000);
 
+  // const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=10&language=en&format=json`;
   const url =
     "https://api.open-meteo.com/v1/forecast?latitude=25&longitude=45&daily=precipitation_probability_max,weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code,visibility&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,pressure_msl&timezone=GMT&past_days=3";
   // const url =
   //   "https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=precipitation_probability_max,weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code,visibility&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,pressure_msl&timezone=GMT&past_days=3";
 
-  // الأيقوناات
+  //API  الأيقوناات
   const skycons = new Skycons({
     color: "white",
     resizeClear: true,
   });
 
+  function changeWallpaper(weatherCode) {
+    const wallpaper = document.getElementById("wallpaper");
+    switch (weatherCode) {
+      case 0:
+        wallpaper.src = "img/wallpapers/clear.jpg";
+        break;
+      case 1:
+      case 2:
+      case 3:
+        wallpaper.src = "img/wallpapers/cloudy.jpg"; //Mainly clear, partly cloudy, and overcast
+        break;
+      case 45:
+      case 48:
+        wallpaper.src = "img/wallpapers/fog.jpg";
+        break;
+      case 51:
+      case 53:
+      case 55:
+        wallpaper.src = "img/wallpapers/drizzle.jpg";
+        break;
+      case 61:
+      case 63:
+      case 65:
+        wallpaper.src = "img/wallpapers/rain.jpg";
+        break;
+      case 66:
+      case 67:
+        wallpaper.src = "img/wallpapers/freezingRain.jpg";
+        break;
+      case 71:
+      case 73:
+      case 75:
+        wallpaper.src = "img/wallpapers/snow.png";
+        break;
+      case 80:
+      case 81:
+      case 82:
+        wallpaper.src = "img/wallpapers/rainShowers.jpg";
+        break;
+      case 85:
+      case 86:
+        wallpaper.src = "img/wallpapers/snowShowers.jpg";
+        break;
+      case 95:
+      case 96:
+      case 99:
+        wallpaper.src = "img/wallpapers/thunderstorm.jpg";
+        break;
+      default:
+        wallpaper.src = "img/wallpapers/default.jpg";
+        break;
+    }
+  }
   function getWeatherIcon(weatherCode) {
     switch (weatherCode) {
-      case 0: // صافي
+      case 0:
         return Skycons.CLEAR_DAY;
       case 1:
       case 2:
-      case 3: // غائم
+      case 3:
         return Skycons.PARTLY_CLOUDY_DAY;
       case 45:
-      case 48: // ضباب
+      case 48:
         return Skycons.FOG;
       case 51:
       case 53:
-      case 55: // رذاذ
+      case 55:
         return Skycons.RAIN;
       case 61:
       case 63:
-      case 65: // مطر
+      case 65:
         return Skycons.RAIN;
       case 71:
       case 73:
-      case 75: // ثلج
+      case 75:
         return Skycons.SNOW;
       case 80:
       case 81:
-      case 82: // زخات
+      case 82:
         return Skycons.SLEET;
       case 95:
       case 96:
-      case 99: // عواصف
+      case 99:
         return Skycons.RAIN;
       default:
         return Skycons.CLOUDY;
@@ -141,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
           skycons.set(`weather-icon${i}`, dailyIcon);
         }
       }
+      changeWallpaper(data.current.weather_code);
       getWeatherData();
       getHourlyData();
       getDailyTemp();
