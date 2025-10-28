@@ -59,7 +59,7 @@ header .logo {
 .search-container {
   justify-content: center;
   display: flex;
-  margin: 1.5% 0;
+  margin: 0.7rem 0;
   position: relative;
   width: 40%;
   /* background-color: antiquewhite; */
@@ -97,11 +97,11 @@ button {
   border: none;
   outline: none;
 }
-.search-container #city-input {
+.search-container #city-search {
   background-color: transparent;
   background-color: #ffffff34;
   backdrop-filter: blur(8px);
-  border: solid 0.5px #000000;
+  /* border: solid 0.5px #000000; */
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
   border-radius: 50px;
   width: 100%;
@@ -117,7 +117,7 @@ button {
 .search-container #search-btn {
   border-radius: 50px;
   backdrop-filter: blur(8px);
-  border: solid 0.5px #000000;
+  /* border: solid 0.5px #000000; */
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
   height: 4vh;
   width: 2vw;
@@ -139,6 +139,10 @@ button {
   padding: 1.5% 5%;
   box-sizing: border-box;
 }
+/* .search-results {
+  min-height: 200px;
+  max-height: 300px;
+} */
 .prayer,
 .hourly-weather {
   display: flex;
