@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="weather-background">
-      <img src="img/wallpaper3.jpg" class="sunny-img" />
+      <img id="wallpaper" class="preload" src="img/wallpapers/preload.gif" />
     </div>
     <header>
       <div class="left-header">
@@ -41,42 +41,52 @@
           <h3 class="logo">Weather.com</h3>
         </a>
       </div>
-      <div class="search-container">
-        <input type="text" id="city-input" placeholder="Search a City" />
-        <button id="search-btn">
-          <i class="fas fa-search" style="font-size: 1.5rem"></i>
-        </button>
+      <div class="search-wrapper">
+        <div class="search-container">
+          <input type="text" id="city-search" placeholder="search a city" />
+          <button id="search-btn">
+            <i class="fas fa-search" style="font-size: 1.5rem"></i>
+          </button>
+        </div>
+
+        <div class="search-results" id="search-results"></div>
       </div>
+
       <div class="right-header"></div>
     </header>
     <!-- ------------------------------------------------------------------------------------------------ -->
     <main class="weather-content">
       <div class="prayer">
         <h3 class="">Prayer Time</h3>
+        <div class="row" id="hijriDate" style="justify-content: center"></div>
 
         <div class="row" id="Fajr">
           <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+          <div id="pr-time1"></div>
         </div>
-        <div class="row" id="Fajr">
-          <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+        <div class="row" id="Sunset">
+          <div id="pr-name2">Sunset</div>
+          <div id="pr-time2"></div>
         </div>
-        <div class="row" id="Fajr">
-          <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+        <div class="row" id="Dhuhr">
+          <div id="pr-name3">Dhuhr</div>
+          <div id="pr-time3"></div>
         </div>
-        <div class="row" id="Fajr">
-          <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+        <div class="row" id="Asr">
+          <div id="pr-name4">Asr</div>
+          <div id="pr-time4"></div>
         </div>
-        <div class="row" id="Fajr">
-          <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+        <div class="row" id="Maghrib">
+          <div id="pr-name5">Maghrib</div>
+          <div id="pr-time5"></div>
         </div>
-        <div class="row" id="Fajr">
-          <div id="pr-name1">Fajr</div>
-          <div id="pr-time1">5:00am</div>
+        <div class="row" id="Isha">
+          <div id="pr-name6">Isha</div>
+          <div id="pr-time6"></div>
+        </div>
+        <div class="row" id="Midnight">
+          <div id="pr-name7">Midnight</div>
+          <div id="pr-time7"></div>
         </div>
       </div>
 
