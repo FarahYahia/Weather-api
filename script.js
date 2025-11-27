@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const datetimeElement = document.getElementById("datetime");
+  const loadingOverlay = document.getElementById("loading-overlay");
 
   // Default weather (Riyadh)
   const def_city = "Riyadh";
@@ -284,6 +285,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentIcon = getWeatherIcon(data.current.weather_code);
         skycons.set("current-weather-icon", currentIcon);
         skycons.play();
+
+        loadingOverlay.classList.add("hidden-loading-overlay");
       })
       .catch((error) => {
         console.error("Weather API Error:", error);
