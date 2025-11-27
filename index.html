@@ -1,448 +1,297 @@
-* {
-  margin: 0;
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Alkatra:wght@500&family=Boogaloo&family=Kalam:wght@300;400;700&family=Playwrite+AU+VIC&family=Sansita+Swashed:wght@300&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.com/npm/@basmilius/weather-icons@3.0.0/production/line/all.css"
+    />
+    <script src="https://darkskyapp.github.io/skycons/skycons.js"></script>
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+      type="module"
+    ></script>
 
-html,
-body {
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-  font-family: "Alkatra", system-ui;
-  display: flex;
-  flex-direction: column;
-  background-color: #0000001a;
-}
+    <title>Weather app</title>
+  </head>
+  <body>
+    <div class="weather-background">
+      <img id="wallpaper" class="preload" src="img/wallpapers/preload.gif" />
+    </div>
+    <div id="loading-overlay">
+      <img id="overlay" alt="Loading..." src="img/wallpapers/preload.gif" />
+      <h2>Checking your weather :)</h2>
+    </div>
+    <header>
+      <div class="left-header">
+        <a href="index.html">
+          <!-- <img
+            src="img/LOGO-2.png"
+            alt="Logo by lifeoffai from FC Chaudhary"
+            class="logo"
+          /> -->
+          <h3 class="logo">Weather.com</h3>
+        </a>
+      </div>
+      <div class="search-wrapper">
+        <div class="search-container">
+          <input type="text" id="city-search" placeholder="search a city" />
+          <button id="search-btn">
+            <i class="fas fa-search" style="font-size: 1.5rem"></i>
+          </button>
+        </div>
 
-h3 {
-  font-size: 1.8rem;
-}
-header {
-  display: flex;
-  margin: 0;
-  text-align: center;
-  position: static;
-  flex-direction: row;
-  top: 0;
-  z-index: 999;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: #ffffff;
-  transition: background-color 0.3s;
-  backdrop-filter: blur(2px);
-  width: 100%;
-  height: auto;
-  min-height: 50px;
-}
-.left-header {
-  width: 30%;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-}
-header .logo {
-  height: 13vh;
-  width: 100%;
-  /* margin: 0 auto; */
-  /* position: absolute; */
-  /* top: 2%;
-  left: 5%; */
-  color: white;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-}
-.search-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
+        <div class="search-results" id="search-results"></div>
+      </div>
 
-.search-container {
-  display: flex;
-  justify-content: center;
-  margin: 0.7rem 0;
-  width: 40%;
-  max-width: 400px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+      <div class="right-header"></div>
+    </header>
+    <!-- ------------------------------------------------------------------------------------------------ -->
+    <main class="weather-content">
+      <div class="prayer">
+        <h3 class="">Prayer Time</h3>
+        <div class="row" id="hijriDate" style="justify-content: center"></div>
 
-#city-search {
-  flex-grow: 1;
-  padding: 10px 15px;
-  border: none;
-  font-size: 1rem;
-  outline: none;
-}
+        <div class="row" id="Fajr">
+          <div id="pr-name1">Fajr</div>
+          <div id="pr-time1"></div>
+        </div>
+        <div class="row" id="Sunset">
+          <div id="pr-name2">Sunset</div>
+          <div id="pr-time2"></div>
+        </div>
+        <div class="row" id="Dhuhr">
+          <div id="pr-name3">Dhuhr</div>
+          <div id="pr-time3"></div>
+        </div>
+        <div class="row" id="Asr">
+          <div id="pr-name4">Asr</div>
+          <div id="pr-time4"></div>
+        </div>
+        <div class="row" id="Maghrib">
+          <div id="pr-name5">Maghrib</div>
+          <div id="pr-time5"></div>
+        </div>
+        <div class="row" id="Isha">
+          <div id="pr-name6">Isha</div>
+          <div id="pr-time6"></div>
+        </div>
+        <div class="row" id="Midnight">
+          <div id="pr-name7">Midnight</div>
+          <div id="pr-time7"></div>
+        </div>
+      </div>
 
-#search-btn {
-  background-color: #ffd700;
-  border: none;
-  color: #333;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
+      <div class="weather-display">
+        <div class="city" style="font-size: 1.5rem">
+          <i
+            class="fas fa-map-marker-alt"
+            style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"
+          ></i>
+          Riyadh
+          <!-- here is city name  -->
+        </div>
+        <div class="time">
+          <div class="datetime" id="datetime">
+            <!-- here is the date and time -->
+          </div>
+        </div>
+        <div class="weather-temp">
+          <canvas
+            class="current-weather-icon"
+            id="current-weather-icon"
+          ></canvas>
+          <div
+            id="temperature"
+            style="font-size: 5rem; font-weight: 600; text-align: center"
+          ></div>
+        </div>
+        <div class="apparent-temperature">
+          Feels like
+          <div
+            id="apparent-value"
+            style="margin-left: 5px; font-size: 1.7rem"
+          ></div>
+        </div>
 
-#search-btn:hover {
-  background-color: #e5c400;
-}
+        <div class="weather-details">
+          <div class="detail-item">
+            <div class="detail-label">Wind speed</div>
+            <div id="wind-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Air Humidity</div>
+            <div id="humidity-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Pressure</div>
+            <div id="pressure-value"></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Visibility</div>
+            <div id="visibility-value"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hourly-weather">
+        <h3 class="">Today's Weather</h3>
 
-#search-results {
-  display: none;
-  width: 40%;
-  max-width: 400px;
-  background-color: #ffffff;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-  border-top: 1px solid #eee;
-  z-index: 10;
-}
+        <div class="row">
+          <canvas class="icon" id="hourly-icon0"></canvas>
+          <div id="time-0"></div>
+          <div id="temp-0"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon1"></canvas>
+          <div id="time-1"></div>
+          <div id="temp-1"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon2"></canvas>
+          <div id="time-2"></div>
+          <div id="temp-2"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon3"></canvas>
+          <div id="time-3"></div>
+          <div id="temp-3"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon4"></canvas>
+          <div id="time-4"></div>
+          <div id="temp-4"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon5"></canvas>
+          <div id="time-5"></div>
+          <div id="temp-5"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon6"></canvas>
+          <div id="time-6"></div>
+          <div id="temp-6"></div>
+        </div>
+        <div class="row">
+          <canvas class="icon" id="hourly-icon7"></canvas>
+          <div id="time-7"></div>
+          <div id="temp-7"></div>
+        </div>
+      </div>
+    </main>
+    <!-- ------------------------------------------------------------------------------------------------ -->
+    <div class="daily-weather">
+      <!-- 2 days ago -->
+      <div class="col" id="day-1">
+        <div class="day" id="day1"></div>
+        <div class="date" id="date1"></div>
+        <canvas class="icon" id="weather-icon1"></canvas>
+        <div class="temp">
+          <div id="day-1-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-1-low"></div>
+        </div>
+        <!-- precipitation probability max -->
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm1"></div>
+        </div>
+      </div>
+      <!-- Yesterday -->
+      <div class="col" id="day-2">
+        <div class="day" id="day2"></div>
+        <div class="date" id="date2"></div>
+        <canvas class="icon" id="weather-icon2"></canvas>
+        <div class="temp">
+          <div id="day-2-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-2-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm2"></div>
+        </div>
+      </div>
+      <!-- today -->
+      <div class="col" id="today">
+        <div class="today">TODAY</div>
+        <div class="today-line"></div>
+        <div class="day" id="day3"></div>
+        <div class="date" id="date3"></div>
+        <canvas class="icon" id="weather-icon3" style="width: 55%"></canvas>
+        <div class="temp" style="margin: 5px 0">
+          <div id="day-3-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-3-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm3"></div>
+        </div>
+      </div>
+      <!-- Tomorrow -->
+      <div class="col">
+        <div class="day" id="day4"></div>
+        <div class="date" id="date4"></div>
+        <canvas class="icon" id="weather-icon4"></canvas>
+        <div class="temp">
+          <div id="day-4-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-4-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm4"></div>
+        </div>
+      </div>
+      <!-- 2 Days Later -->
+      <div class="col">
+        <div class="day" id="day5"></div>
+        <div class="date" id="date5"></div>
+        <canvas class="icon" id="weather-icon5"></canvas>
 
-.city-result {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 10px 15px;
+        <div class="temp">
+          <div id="day-5-high"></div>
+          <p style="padding: 0 5px">|</p>
+          <div id="day-5-low"></div>
+        </div>
+        <div class="row">
+          <i
+            class="fa-solid fa-droplet"
+            style="margin-right: 10px; padding-top: 7px"
+          ></i>
+          <div id="ppm5"></div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
 
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid #eee;
-  z-index: 999;
-}
-
-.city-result:last-child {
-  border-bottom: none;
-}
-
-.city-result:hover {
-  background-color: #f0f0f0;
-}
-
-.city-result strong {
-  font-size: 1rem;
-  color: #333;
-}
-
-.city-result span {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 2px;
-}
-
-.right-header {
-  width: 30%;
-}
-.weather-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -99;
-}
-.weather-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#loading-overlay {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-}
-#loading-overlay h2,
-#dotlottie-wc {
-  position: absolute;
-  color: white;
-  font-size: 2rem;
-  text-shadow: 1px 1px #333;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#overlay {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.hidden-loading-overlay {
-  opacity: 0;
-  pointer-events: none;
-}
-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  outline: none;
-}
-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  outline: none;
-}
-.search-container #city-search {
-  background-color: transparent;
-  background-color: #ffffff34;
-  backdrop-filter: blur(8px);
-  /* border: solid 0.5px #000000; */
-  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
-  border-radius: 50px;
-  width: 100%;
-  height: 4vh;
-  text-align: center;
-  justify-content: center;
-}
-::placeholder {
-  color: rgb(0, 0, 0);
-  opacity: 1;
-}
-
-.search-container #search-btn {
-  border-radius: 50px;
-  backdrop-filter: blur(8px);
-  /* border: solid 0.5px #000000; */
-  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.37);
-  height: 4vh;
-  width: 2vw;
-  margin-left: 5px;
-  cursor: pointer;
-  background-color: transparent;
-  position: absolute;
-  right: 0;
-  margin: auto;
-}
-.search-container #search-btn :hover {
-  background-color: #d3d3d3;
-}
-.weather-content {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 60vh;
-  padding: 1.5% 5%;
-  box-sizing: border-box;
-}
-/* .search-results {
-  min-height: 200px;
-  max-height: 300px;
-} */
-.prayer,
-.hourly-weather {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  width: 20%;
-  height: 95%;
-  margin-top: 1%;
-  background-color: transparent;
-  background-color: #00000010;
-  backdrop-filter: blur(8px);
-  border: solid 0.1px #ffffff41;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border-radius: 35px;
-  padding: 1% 1.5%;
-  color: white;
-  font-size: 1.7rem;
-  box-sizing: border-box;
-}
-.row {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-.weather-content .row {
-  gap: 20px;
-  justify-content: space-between;
-}
-.weather-display {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-
-  width: 60%;
-  height: 100%;
-  /* background-color: blueviolet; */
-  color: white;
-  padding: 2%;
-}
-.time,
-.city,
-.weather-temp,
-.apparent-temperature {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  font-size: 1.6rem;
-}
-.weather-temp {
-  flex-direction: column;
-}
-.current-weather-icon {
-  display: block;
-  margin: 0 auto;
-  width: 32%;
-  height: auto;
-  margin-top: 20px;
-}
-.city {
-  color: white;
-}
-.temp {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-  justify-content: center;
-}
-#temperature {
-  width: 100%;
-  text-align: center;
-}
-
-.daily-weather .icon {
-  width: 45%;
-  margin-top: 10px;
-}
-.hourly-weather .icon {
-  width: 32%;
-  max-height: 40px;
-}
-.hourly-weather .row canvas {
-  max-width: 88px;
-  text-align: right;
-}
-.hourly-weather .row div:nth-of-type(1) {
-  min-width: 70px;
-  text-align: right;
-}
-.hourly-weather .row div:nth-of-type(2) {
-  min-width: 90px;
-  text-align: right;
-}
-.time {
-  gap: 10px;
-  color: white;
-  font-size: 1.2rem;
-}
-.weather-details {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); */
-  color: white;
-  padding: 1% 10%;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex: 1;
-  min-width: 0;
-}
-
-.detail-label {
-  color: rgb(238, 238, 238);
-  font-size: 1.5rem;
-  font-weight: 400;
-}
-
-#wind-value,
-#humidity-value,
-#pressure-value,
-#visibility-value {
-  color: white;
-  font-weight: 600;
-  font-size: 1.2rem;
-}
-
-.daily-weather {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 90%;
-  flex-grow: 1;
-  align-self: stretch;
-  margin: 0 5%;
-  box-sizing: border-box;
-  bottom: 0;
-  flex: 1;
-  background-color: transparent;
-  background-color: #00000010;
-  backdrop-filter: blur(8px);
-  border: solid 0.1px #ffffff41;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-  border-radius: 35px 35px 0 0;
-}
-.daily-weather .col {
-  /* border: solid 1px #202020; */
-  flex-direction: column;
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-  align-items: center;
-  color: white;
-  font-size: 1.4rem;
-  flex-grow: 1;
-  flex-basis: 0;
-  padding: 1rem;
-  border-bottom: 0;
-}
-
-.daily-weather .col .date {
-  font-size: 1.2rem;
-  color: #ebebeb;
-}
-
-#today {
-  padding: 0.2rem 0 1rem 0;
-}
-.today-line {
-  border: 0;
-  height: 1.2px;
-  width: 100%;
-
-  background: #ffd700;
-  background-image: linear-gradient(to right, #00000088, #ffd700, #00000088);
-}
-.today {
-  color: #e9c70a;
-  font-size: 1.3rem;
-}
-.col .day,
-.col .date {
-  font-size: 1.6rem;
-}
