@@ -11,6 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentTimeZone = null;
   let dateTimeInterval = null;
 
+  // changing the time format from 24 to 12 hour notation
+  function timeFormat(time) {
+    let [hours, minutes] = time.split(":").map(Number);
+    let period;
+    if (hours >= 12) {
+      period = "PM";
+    } else {
+      period = "AM";
+    }
+    hours = hours % 12 || 12;
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    return hours + ":" + minutes + " " + period;
+  }
+
   // Update date and time based on location
   function updateDateTime() {
     if (!currentTimeZone) return;
@@ -35,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Change wallpaper based on weather code and visibility ------------------------------------------------------
-  function changeWallpaper(weatherCode, visibilityKm) {
+  function changeWallpaper(weatherCode, visibilityKm, isDay) {
     const wallpaper = document.getElementById("wallpaper");
     if (visibilityKm !== undefined) {
       if (visibilityKm <= 10) {
@@ -53,12 +69,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     switch (weatherCode) {
       case 0:
-        wallpaper.src = "img/wallpapers/clear.jpg";
+        wallpaper.src = isDay
+          ? "img/wallpapers/clear.jpg"
+          : "img/wallpapers/clear-night.jpg";
         break;
       case 1:
       case 2:
       case 3:
-        wallpaper.src = "img/wallpapers/cloudy.jpg";
+        wallpaper.src = isDay
+          ? "img/wallpapers/cloudy.jpg"
+          : "img/wallpapers/cloudy-night.jpg";
         break;
       case 45:
       case 48:
@@ -104,14 +124,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Get weather icon based on wearther code ------------------------------------------------------------------------
-  function getWeatherIcon(weatherCode) {
+  function getWeatherIcon(weatherCode, isDay) {
     switch (weatherCode) {
       case 0:
-        return Skycons.CLEAR_DAY;
+        return isDay ? Skycons.CLEAR_DAY : Skycons.CLEAR_NIGHT;
       case 1:
       case 2:
       case 3:
-        return Skycons.PARTLY_CLOUDY_DAY;
+        return isDay ? Skycons.PARTLY_CLOUDY_DAY : Skycons.PARTLY_CLOUDY_NIGHT;
       case 45:
       case 48:
         return Skycons.FOG;
@@ -158,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ALASHAN :::::: Prayer times and hijri date
-  async function fetchPrayerTimes(lat, lon) {
+  async function fetchPrayerTimes(lat, lon, time) {
     const method = 4; // هذا رقم أم القرى
 
     const url = `https://api.aladhan.com/v1/timings/today?latitude=${lat}&longitude=${lon}&method=${method}`;
@@ -170,18 +190,26 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.code === 200 && data.data && data.data.timings) {
         const timings = data.data.timings;
         // ... (بقية تحديث الـ innerHTML) ...
-        document.getElementById("pr-time1").innerHTML = timings.Fajr;
-        document.getElementById("pr-time2").innerHTML = timings.Sunrise;
-        document.getElementById("pr-time3").innerHTML = timings.Dhuhr;
-        document.getElementById("pr-time4").innerHTML = timings.Asr;
-        document.getElementById("pr-time5").innerHTML = timings.Maghrib;
-        document.getElementById("pr-time6").innerHTML = timings.Isha;
-        document.getElementById("pr-time7").innerHTML = timings.Midnight;
+        document.getElementById("Fajr").innerHTML = timeFormat(timings.Fajr);
+        document.getElementById("Sunrise").innerHTML = timeFormat(
+          timings.Sunrise
+        );
+        document.getElementById("Dhuhr").innerHTML = timeFormat(timings.Dhuhr);
+        document.getElementById("Asr").innerHTML = timeFormat(timings.Asr);
+        document.getElementById("Maghrib").innerHTML = timeFormat(
+          timings.Maghrib
+        );
+        document.getElementById("Isha").innerHTML = timeFormat(timings.Isha);
+        document.getElementById("Midnight").innerHTML = timeFormat(
+          timings.Midnight
+        );
       }
 
       if (data.code === 200 && data.data && data.data.date.hijri) {
         const hijri = data.data.date.hijri;
-        document.getElementById("hijriDate").innerHTML = hijri.date;
+        document.getElementById(
+          "hijriDate"
+        ).innerHTML = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
       }
     } catch (error) {
       console.error("Prayer Times API Error:", error);
@@ -191,10 +219,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // IMPORTANT Weather FUNCTION =========================////////////////////////////////////////////////////////////////////////////////////=================================
   function fetchWeatherData(lat, lon, updateCityName = false) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_probability_max,weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code,visibility&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,pressure_msl&timezone=auto&past_days=3`;
-
     fetch(url)
       .then((response) => response.json())
       .then(async (data) => {
+        const isDay = data.current.is_day;
+
         document.getElementById(
           "temperature"
         ).innerHTML = `${data.current.temperature_2m} °C`;
@@ -218,11 +247,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update hourly waether data***********
         const hourly = [0, 3, 6, 9, 12, 15, 18, 21];
         hourly.forEach((hour, index) => {
-          document.getElementById(`time-${index}`).innerHTML = `${hour}:00`;
+          const formatHour = timeFormat(hour + ":00");
+          document.getElementById(`time-${index}`).innerHTML = `${formatHour}`;
           document.getElementById(
             `temp-${index}`
           ).innerHTML = `${data.hourly.temperature_2m[hour]}°C`;
-          const hourlyIcon = getWeatherIcon(data.hourly.weather_code[hour]);
+          const hourIsDay = hour >= 6 && hour < 18;
+
+          const hourlyIcon = getWeatherIcon(
+            data.hourly.weather_code[hour],
+            hourIsDay
+          );
           skycons.set(`hourly-icon${index}`, hourlyIcon);
         });
 
@@ -260,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Update daily icons and call icon function *********************
         for (let i = 1; i <= 5; i++) {
-          const dailyIcon = getWeatherIcon(data.daily.weather_code[i]);
+          const dailyIcon = getWeatherIcon(data.daily.weather_code[i], true); // true for sunny icon
           skycons.set(`weather-icon${i}`, dailyIcon);
         }
 
@@ -278,11 +313,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Change wallpaper function and set current icon ***********************
-        changeWallpaper(data.current.weather_code, visibilityKm);
+        changeWallpaper(data.current.weather_code, visibilityKm, isDay);
         // prayer time function **********************************************
         fetchPrayerTimes(lat, lon);
 
-        const currentIcon = getWeatherIcon(data.current.weather_code);
+        const currentIcon = getWeatherIcon(data.current.weather_code, isDay);
         skycons.set("current-weather-icon", currentIcon);
         skycons.play();
 
@@ -309,10 +344,10 @@ document.addEventListener("DOMContentLoaded", function () {
           fetchWeatherData(latitude, longitude, true);
         },
         function (error) {
-          console.log("Geolocation error:", error.message);
-          console.log("Using default location: Riyadh");
+          document.getElementById("loading-text").innerHTML =
+            "Location access denied, loading default city...";
+          console.log("Location access denied, loading default city... Riyadh");
 
-          // Use default Riyadh location ♥
           latitude = def_lat;
           longitude = def_lon;
           cityName = def_city;
