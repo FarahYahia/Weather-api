@@ -22,17 +22,30 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.com/npm/@basmilius/weather-icons@3.0.0/production/line/all.css"
     />
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js"
+      type="module"
+    ></script>
+
     <script src="https://darkskyapp.github.io/skycons/skycons.js"></script>
 
     <title>Weather app</title>
   </head>
   <body>
     <div class="weather-background">
-      <img id="wallpaper" class="preload" src="img/wallpapers/preload.gif" />
+      <img id="wallpaper" class="preload" />
     </div>
     <div id="loading-overlay">
       <img id="overlay" alt="Loading..." src="img/wallpapers/preload.gif" />
-      <h2 id="loading-text">Checking your weather... :)</h2>
+      <div class="overlay-container">
+        <dotlottie-wc
+          src="https://lottie.host/74742284-b26e-4950-a5a9-29b199744c8c/U2ctoSZkej.lottie"
+          style="width: 300px; height: 300px"
+          autoplay
+          loop
+        ></dotlottie-wc>
+        <h2 id="loading-text">Checking your weather... :)</h2>
+      </div>
     </div>
     <header>
       <div class="left-header">
@@ -40,17 +53,15 @@
           <h3 class="logo">Weather.com</h3>
         </a>
       </div>
-      <div class="search-wrapper">
-        <div class="search-container">
-          <input type="text" id="city-search" placeholder="search a city" />
-          <button id="search-btn">
-            <i class="fas fa-search" style="font-size: 1.5rem"></i>
-          </button>
-        </div>
-
-        <div class="search-results" id="search-results"></div>
+      <div class="search-container">
+        <!-- <div class="search-bar"> -->
+        <input type="text" id="city-search" placeholder="Search a city" />
+        <button id="search-btn">
+          <i class="fas fa-search" style="font-size: 1.5rem"></i>
+        </button>
+        <!-- </div> -->
       </div>
-
+      <div class="search-results" id="search-results"></div>
       <div class="right-header"></div>
     </header>
     <!-- ------------------------------------------------------------------------------------------------ -->
