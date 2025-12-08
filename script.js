@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const datetimeElement = document.getElementById("datetime");
   const loadingOverlay = document.getElementById("loading-overlay");
 
-  // Default weather (Riyadh)
+  // for the fallback
   const def_city = "Riyadh";
   const def_lat = 24.7136;
   const def_lon = 46.6753;
@@ -67,6 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
+
+    // add more images /******************************************************** */
     switch (weatherCode) {
       case 0:
         wallpaper.src = isDay
@@ -161,23 +163,48 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function getCityFromCoordinates(lat, lon) {
-    //GEOCODING:::: Get city name and if none, show RIYADH ♥ :)
     try {
-      const url = `https://geocoding-api.open-meteo.com/v1/search?latitude=${lat}&longitude=${lon}&count=1&language=en&format=json`;
-      const response = await fetch(url);
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`;
+
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "WeatherApp/1.0",
+        },
+      });
+
       const data = await response.json();
 
-      if (data.results && data.results.length > 0) {
-        return data.results[0].name;
+      console.log("Nominatim response:", data);
+
+      if (data && data.address) {
+        return {
+          name:
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            data.address.country ||
+            "",
+          country: data.address.country || "",
+          admin1: data.address.state || "",
+        };
       }
-      return "your Location";
+
+      return {
+        name: "Your Location",
+        country: "",
+        admin1: "",
+      };
     } catch (error) {
       console.error("Reverse geocoding error:", error);
-      return "Unknown Location";
+      return {
+        name: "Your Location",
+        country: "",
+        admin1: "",
+      };
     }
   }
 
-  // ALASHAN :::::: Prayer times and hijri date
+  // ALADHAN :::::: Prayer times and hijri date
   async function fetchPrayerTimes(lat, lon, time) {
     const method = 4; // هذا رقم أم القرى
 
@@ -189,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (data.code === 200 && data.data && data.data.timings) {
         const timings = data.data.timings;
-        // ... (بقية تحديث الـ innerHTML) ...
         document.getElementById("Fajr").innerHTML = timeFormat(timings.Fajr);
         document.getElementById("Sunrise").innerHTML = timeFormat(
           timings.Sunrise
@@ -247,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update hourly waether data***********
         const hourly = [0, 3, 6, 9, 12, 15, 18, 21];
         hourly.forEach((hour, index) => {
-          const formatHour = timeFormat(hour + ":00");
+          const formatHour = timeFormat(`${hour}:00`);
           document.getElementById(`time-${index}`).innerHTML = `${formatHour}`;
           document.getElementById(
             `temp-${index}`
@@ -301,15 +327,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // If this is from user's location, get city name ******************
         if (updateCityName) {
-          const detectedCity = await getCityFromCoordinates(lat, lon);
-          cityName = detectedCity;
-          const cityElement = document.querySelector(".city");
-          if (cityElement) {
-            cityElement.innerHTML = `
-              <i class="fas fa-map-marker-alt" style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"></i>
-              ${detectedCity}
-            `;
-          }
+          const detectedLocation = await getCityFromCoordinates(lat, lon);
+          updateCityInUI(
+            detectedLocation.name,
+            detectedLocation.country,
+            detectedLocation.admin1
+          );
         }
 
         // Change wallpaper function and set current icon ***********************
@@ -328,31 +351,104 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  async function getCityFromIP() {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      const data = await response.json();
+
+      if (data && data.latitude && data.longitude) {
+        return {
+          city: data.city || "Unknown",
+          lat: data.latitude,
+          lon: data.longitude,
+          country: data.country_name || "",
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error("IP Geolocation Error:", error);
+
+      // Fallback
+      try {
+        const fallbackResponse = await fetch("http://ip-api.com/json/");
+        const fallbackData = await fallbackResponse.json();
+
+        if (fallbackData.status === "success") {
+          return {
+            city: fallbackData.city,
+            lat: fallbackData.lat,
+            lon: fallbackData.lon,
+            country: fallbackData.country,
+          };
+        }
+      } catch (fallbackError) {
+        console.error("Fallback IP API also failed:", fallbackError);
+      }
+
+      return null;
+    }
+  }
+  function updateCityInUI(name, country, admin1 = "") {
+    const cityElement = document.querySelector(".city");
+    let displayString = name;
+
+    if (country && name !== country) {
+      displayString = country;
+      if (name) {
+        displayString += ", " + name;
+      }
+    } else if (admin1) {
+      displayString = admin1 + ", " + name;
+    }
+
+    if (cityElement) {
+      cityElement.innerHTML = `
+            <i class="fas fa-map-marker-alt" style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"></i>
+            ${displayString}
+        `;
+    }
+  }
   // GEOLOCATION: Get user's location ------------------------------------------------------------------------------------------------------------------------------------------
-  function getUserLocation() {
+  async function getUserLocation() {
+    const ipLocation = await getCityFromIP();
+
+    let currentLat = ipLocation ? ipLocation.lat : def_lat;
+    let currentLon = ipLocation ? ipLocation.lon : def_lon;
+    let currentCity = ipLocation ? ipLocation.city : def_city;
+
+    if (ipLocation) {
+      currentLat = ipLocation.lat;
+      currentLon = ipLocation.lon;
+      currentCity = ipLocation.city;
+
+      updateCityInUI(currentCity, ipLocation.country);
+    } else {
+      const loadingText = document.getElementById("loading-text");
+      if (loadingText) {
+        loadingText.innerHTML =
+          "Connection failed, loading default location...";
+      }
+    }
+    await fetchWeatherData(currentLat, currentLon, false);
+
     if ("geolocation" in navigator) {
       console.log("Requesting user location...");
 
       navigator.geolocation.getCurrentPosition(
         function (position) {
-          latitude = position.coords.latitude;
-          longitude = position.coords.longitude;
-
-          console.log("User location obtained:", latitude, longitude);
+          let finalLat = position.coords.latitude;
+          let finalLon = position.coords.longitude;
 
           // Fetch weather for user's actual location
-          fetchWeatherData(latitude, longitude, true);
+          fetchWeatherData(finalLat, finalLon, true);
+          console.log("User location obtained:", finalLat, finalLon);
         },
         function (error) {
-          document.getElementById("loading-text").innerHTML =
-            "Location access denied, loading default city...";
-          console.log("Location access denied, loading default city... Riyadh");
-
-          latitude = def_lat;
-          longitude = def_lon;
-          cityName = def_city;
-
-          fetchWeatherData(latitude, longitude, false);
+          console.log(
+            "Location access denied, loading your default location... "
+          );
+          fetchWeatherData(currentLat, currentLon, true);
         },
         // Options
         {
@@ -362,12 +458,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       );
     } else {
-      // Browser doesn't support geolocation
-      console.log("Geolocation not supported. Using default: Riyadh");
-      latitude = def_lat;
-      longitude = def_lon;
-      cityName = def_city;
-      fetchWeatherData(latitude, longitude, false);
+      // IF the Browser doesn't support geolocation
+      console.log("Geolocation not supported. Using IP/Default.");
+      fetchWeatherData(currentLat, currentLon, true);
     }
   }
 
@@ -430,7 +523,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     resultsDiv.style.display = "block";
   }
-
+  function updateCity(name, country) {
+    const cityElement = document.querySelector(".city");
+    if (cityElement) {
+      cityElement.innerHTML = `
+      <i class="fas fa-map-marker-alt" style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"></i>
+      ${country}, ${name}  // ✅
+    `;
+    }
+  }
   window.selectCity = function (lat, lon, name, country, region) {
     console.log(`City selected: ${name}`);
     console.log(`Coordinates: ${lat}, ${lon}`);
@@ -439,21 +540,14 @@ document.addEventListener("DOMContentLoaded", function () {
     latitude = lat;
     longitude = lon;
     cityName = name;
-
-    // Update city name in UI screen
-    const cityElement = document.querySelector(".city");
-    if (cityElement) {
-      cityElement.innerHTML = `
-        <i class="fas fa-map-marker-alt" style="font-size: 1.3rem; margin-right: 10px; padding-top: 7px"></i>
-        ${name}
-      `;
-    }
+    countryName = country;
 
     // Clear search
     searchInput.value = name;
     resultsDiv.innerHTML = "";
     resultsDiv.style.display = "none";
 
+    updateCity(name, country);
     // Fetch weather for the selected city
     fetchWeatherData(lat, lon, false);
   };
