@@ -2,7 +2,9 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+html {
+  font-size: clamp(10px, 1.2vw, 16px);
+}
 html,
 body {
   width: 100%;
@@ -447,7 +449,6 @@ button {
   border: 0;
   height: 1.2px;
   width: 100%;
-
   background: #ffd700;
   background-image: linear-gradient(to right, #00000088, #ffd700, #00000088);
 }
@@ -458,4 +459,12 @@ button {
 .col .day,
 .col .date {
   font-size: 1.6rem;
+}
+
+.transition-animation {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
 }
