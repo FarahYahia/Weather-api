@@ -17,6 +17,8 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #000000;
+    z-index: -99;
+
 }
 
 h3 {
@@ -468,3 +470,4 @@ button {
 .fade-out {
   opacity: 0;
 }
+
