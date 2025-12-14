@@ -52,79 +52,128 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Change wallpaper based on weather code and visibility ------------------------------------------------------
   function changeWallpaper(weatherCode, visibilityKm, isDay) {
-    const wallpaper = document.getElementById("wallpaper");
+    const wallpaperContainer = document.querySelector(".weather-background");
+    const currentWallpaper = document.getElementById("wallpaper");
+
+    let wallpaperSrc = "";
+
     if (visibilityKm !== undefined) {
       if (visibilityKm <= 10) {
         if (visibilityKm <= 1) {
-          wallpaper.src = "img/wallpapers/Sandstorm.jpg";
-          return;
+          wallpaperSrc = "img/wallpapers/Sandstorm.jpg";
         } else if (visibilityKm > 1 && visibilityKm <= 5) {
-          wallpaper.src = "img/wallpapers/dusty.jpg";
-          return;
+          wallpaperSrc = "img/wallpapers/dusty.jpg";
         } else if (visibilityKm > 5 && visibilityKm <= 10) {
-          wallpaper.src = "img/wallpapers/haze.jpg";
-          return;
+          wallpaperSrc = "img/wallpapers/haze.jpg";
         }
       }
     }
 
-    // add more images /******************************************************** */
-    switch (weatherCode) {
-      case 0:
-        wallpaper.src = isDay
-          ? "img/wallpapers/clear.jpg"
-          : "img/wallpapers/clear-night.jpg";
-        break;
-      case 1:
-      case 2:
-      case 3:
-        wallpaper.src = isDay
-          ? "img/wallpapers/cloudy.jpg"
-          : "img/wallpapers/cloudy-night.jpg";
-        break;
-      case 45:
-      case 48:
-        wallpaper.src = "img/wallpapers/fog.jpg";
-        break;
-      case 51:
-      case 53:
-      case 55:
-        wallpaper.src = "img/wallpapers/drizzle.jpg";
-        break;
-      case 61:
-      case 63:
-      case 65:
-        wallpaper.src = "img/wallpapers/rain.jpg";
-        break;
-      case 66:
-      case 67:
-        wallpaper.src = "img/wallpapers/freezingRain.jpg";
-        break;
-      case 71:
-      case 73:
-      case 75:
-        wallpaper.src = "img/wallpapers/snow.png";
-        break;
-      case 80:
-      case 81:
-      case 82:
-        wallpaper.src = "img/wallpapers/rainShowers.jpg";
-        break;
-      case 85:
-      case 86:
-        wallpaper.src = "img/wallpapers/snowShowers.jpg";
-        break;
-      case 95:
-      case 96:
-      case 99:
-        wallpaper.src = "img/wallpapers/thunderstorm.jpg";
-        break;
-      default:
-        wallpaper.src = "img/wallpapers/default.jpg";
-        break;
+    if (!wallpaperSrc) {
+      switch (weatherCode) {
+        case 0:
+          wallpaperSrc = isDay
+            ? "img/wallpapers/clear.jpg"
+            : "img/wallpapers/clear-night.jpg";
+          break;
+        case 1:
+        case 2:
+        case 3:
+          wallpaperSrc = isDay
+            ? "img/wallpapers/cloudy.jpg"
+            : "img/wallpapers/cloudy-night.jpg";
+          break;
+        case 45:
+        case 48:
+          wallpaperSrc = "img/wallpapers/fog.jpg";
+          break;
+        case 51:
+        case 53:
+        case 55:
+          wallpaperSrc = "img/wallpapers/drizzle.jpg";
+          break;
+        case 61:
+        case 63:
+        case 65:
+          wallpaperSrc = "img/wallpapers/rain.jpg";
+          break;
+        case 66:
+        case 67:
+          wallpaperSrc = "img/wallpapers/freezingRain.jpg";
+          break;
+        case 71:
+        case 73:
+        case 75:
+          wallpaperSrc = "img/wallpapers/snow.png";
+          break;
+        case 80:
+        case 81:
+        case 82:
+          wallpaperSrc = "img/wallpapers/rainShowers.jpg";
+          break;
+        case 85:
+        case 86:
+          wallpaperSrc = "img/wallpapers/snowShowers.jpg";
+          break;
+        case 95:
+        case 96:
+        case 99:
+          wallpaperSrc = "img/wallpapers/thunderstorm.jpg";
+          break;
+        default:
+          wallpaperSrc = "img/wallpapers/default.jpg";
+          break;
+      }
     }
-  }
 
+    if (
+      currentWallpaper &&
+      currentWallpaper.src.includes(wallpaperSrc.split("/").pop())
+    ) {
+      return;
+    }
+
+    const newWallpaper = document.createElement("img");
+    newWallpaper.src = wallpaperSrc;
+    newWallpaper.style.cssText = `
+        position: absolute; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        z-index: -98;
+    `;
+
+    if (!wallpaperContainer) {
+      return;
+    }
+    wallpaperContainer.appendChild(newWallpaper);
+
+    newWallpaper.onload = function () {
+      setTimeout(() => {
+        newWallpaper.style.opacity = "1";
+      }, 50);
+
+      setTimeout(() => {
+        if (currentWallpaper) {
+          newWallpaper.id = "wallpaper";
+          currentWallpaper.removeAttribute("id");
+
+          wallpaperContainer.removeChild(currentWallpaper);
+        }
+      }, 850);
+    };
+
+    newWallpaper.onerror = function () {
+      wallpaperContainer.removeChild(newWallpaper);
+      if (currentWallpaper) {
+        currentWallpaper.src = "img/wallpapers/default.jpg";
+      }
+    };
+  }
   // Get weather icon based on wearther code ------------------------------------------------------------------------
   function getWeatherIcon(weatherCode, isDay) {
     switch (weatherCode) {
@@ -245,119 +294,109 @@ document.addEventListener("DOMContentLoaded", function () {
   // IMPORTANT Weather FUNCTION =========================////////////////////////////////////////////////////////////////////////////////////=================================
   function fetchWeatherData(lat, lon, updateCityName = false) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_probability_max,weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code,visibility&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,pressure_msl&timezone=auto&past_days=3`;
-    const mainContent = document.querySelector(".transition-animation");
+    fetch(url)
+      .then((response) => response.json())
+      .then(async (data) => {
+        const isDay = data.current.is_day;
 
-    mainContent.classList.add("fade-out");
-    setTimeout(() => {
-      fetch(url)
-        .then((response) => response.json())
-        .then(async (data) => {
-          const isDay = data.current.is_day;
+        document.getElementById(
+          "temperature"
+        ).innerHTML = `${data.current.temperature_2m} °C`;
+        document.getElementById(
+          "apparent-value"
+        ).innerHTML = ` ${data.current.apparent_temperature} °C`;
+        document.getElementById(
+          "wind-value"
+        ).innerHTML = `${data.current.wind_speed_10m} km/h`;
+        document.getElementById(
+          "humidity-value"
+        ).innerHTML = `${data.current.relative_humidity_2m} %`;
+        const visibilityKm = Math.round(data.hourly.visibility[0] / 1000);
+        document.getElementById(
+          "visibility-value"
+        ).innerHTML = `${visibilityKm} km`;
+        document.getElementById(
+          "pressure-value"
+        ).innerHTML = `${data.current.pressure_msl} hPa`;
 
+        // Update hourly waether data***********
+        const hourly = [0, 3, 6, 9, 12, 15, 18, 21];
+        hourly.forEach((hour, index) => {
+          const formatHour = timeFormat(`${hour}:00`);
+          document.getElementById(`time-${index}`).innerHTML = `${formatHour}`;
           document.getElementById(
-            "temperature"
-          ).innerHTML = `${data.current.temperature_2m} °C`;
-          document.getElementById(
-            "apparent-value"
-          ).innerHTML = ` ${data.current.apparent_temperature} °C`;
-          document.getElementById(
-            "wind-value"
-          ).innerHTML = `${data.current.wind_speed_10m} km/h`;
-          document.getElementById(
-            "humidity-value"
-          ).innerHTML = `${data.current.relative_humidity_2m} %`;
-          const visibilityKm = Math.round(data.hourly.visibility[0] / 1000);
-          document.getElementById(
-            "visibility-value"
-          ).innerHTML = `${visibilityKm} km`;
-          document.getElementById(
-            "pressure-value"
-          ).innerHTML = `${data.current.pressure_msl} hPa`;
+            `temp-${index}`
+          ).innerHTML = `${data.hourly.temperature_2m[hour]}°C`;
+          const hourIsDay = hour >= 6 && hour < 18;
 
-          // Update hourly waether data***********
-          const hourly = [0, 3, 6, 9, 12, 15, 18, 21];
-          hourly.forEach((hour, index) => {
-            const formatHour = timeFormat(`${hour}:00`);
-            document.getElementById(
-              `time-${index}`
-            ).innerHTML = `${formatHour}`;
-            document.getElementById(
-              `temp-${index}`
-            ).innerHTML = `${data.hourly.temperature_2m[hour]}°C`;
-            const hourIsDay = hour >= 6 && hour < 18;
-
-            const hourlyIcon = getWeatherIcon(
-              data.hourly.weather_code[hour],
-              hourIsDay
-            );
-            skycons.set(`hourly-icon${index}`, hourlyIcon);
-          });
-
-          // Update daily temperatures*******
-          for (let i = 1; i <= 5; i++) {
-            document.getElementById(
-              `day-${i}-high`
-            ).innerHTML = `${data.daily.temperature_2m_max[i]} °C`;
-            document.getElementById(
-              `day-${i}-low`
-            ).innerHTML = `${data.daily.temperature_2m_min[i]} °C`;
-            document.getElementById(
-              `ppm${i}`
-            ).innerHTML = `${data.daily.precipitation_probability_max[i]} %`;
-          }
-
-          // Update dates *****
-          for (let i = 1; i <= 5; i++) {
-            const dateData = data.daily.time[i];
-            const date = new Date(dateData);
-            const day = date.toLocaleDateString("en-EG", { weekday: "long" });
-            const shortDate = date.toLocaleDateString("en-EG", {
-              month: "short",
-              day: "numeric",
-            });
-            document.getElementById(`day${i}`).innerHTML = day;
-            document.getElementById(`date${i}`).innerHTML = shortDate;
-          }
-
-          // for the updateDateTime function *******************************
-          currentTimeZone = data.timezone;
-          clearInterval(dateTimeInterval);
-          updateDateTime();
-          dateTimeInterval = setInterval(updateDateTime, 1000);
-
-          // Update daily icons and call icon function *********************
-          for (let i = 1; i <= 5; i++) {
-            const dailyIcon = getWeatherIcon(data.daily.weather_code[i], true); // true for sunny icon
-            skycons.set(`weather-icon${i}`, dailyIcon);
-          }
-
-          // If this is from user's location, get city name ******************
-          if (updateCityName) {
-            const detectedLocation = await getCityFromCoordinates(lat, lon);
-            updateCityInUI(
-              detectedLocation.name,
-              detectedLocation.country,
-              detectedLocation.admin1
-            );
-          }
-
-          // Change wallpaper function and set current icon ***********************
-          changeWallpaper(data.current.weather_code, visibilityKm, isDay);
-          // prayer time function **********************************************
-          fetchPrayerTimes(lat, lon);
-
-          const currentIcon = getWeatherIcon(data.current.weather_code, isDay);
-          skycons.set("current-weather-icon", currentIcon);
-          skycons.play();
-          mainContent.classList.remove("fade-out");
-
-          loadingOverlay.classList.add("hidden-loading-overlay");
-        })
-        .catch((error) => {
-          console.error("Weather API Error:", error);
-          mainContent.classList.remove("fade-out");
+          const hourlyIcon = getWeatherIcon(
+            data.hourly.weather_code[hour],
+            hourIsDay
+          );
+          skycons.set(`hourly-icon${index}`, hourlyIcon);
         });
-    }, 500); // فترة انتظار التلاشي
+
+        // Update daily temperatures*******
+        for (let i = 1; i <= 5; i++) {
+          document.getElementById(
+            `day-${i}-high`
+          ).innerHTML = `${data.daily.temperature_2m_max[i]} °C`;
+          document.getElementById(
+            `day-${i}-low`
+          ).innerHTML = `${data.daily.temperature_2m_min[i]} °C`;
+          document.getElementById(
+            `ppm${i}`
+          ).innerHTML = `${data.daily.precipitation_probability_max[i]} %`;
+        }
+
+        // Update dates *****
+        for (let i = 1; i <= 5; i++) {
+          const dateData = data.daily.time[i];
+          const date = new Date(dateData);
+          const day = date.toLocaleDateString("en-EG", { weekday: "long" });
+          const shortDate = date.toLocaleDateString("en-EG", {
+            month: "short",
+            day: "numeric",
+          });
+          document.getElementById(`day${i}`).innerHTML = day;
+          document.getElementById(`date${i}`).innerHTML = shortDate;
+        }
+
+        // for the updateDateTime function *******************************
+        currentTimeZone = data.timezone;
+        clearInterval(dateTimeInterval);
+        updateDateTime();
+        dateTimeInterval = setInterval(updateDateTime, 1000);
+
+        // Update daily icons and call icon function *********************
+        for (let i = 1; i <= 5; i++) {
+          const dailyIcon = getWeatherIcon(data.daily.weather_code[i], true); // true for sunny icon
+          skycons.set(`weather-icon${i}`, dailyIcon);
+        }
+
+        // If this is from user's location, get city name ******************
+        if (updateCityName) {
+          const detectedLocation = await getCityFromCoordinates(lat, lon);
+          updateCityInUI(
+            detectedLocation.name,
+            detectedLocation.country,
+            detectedLocation.admin1
+          );
+        }
+
+        // Change wallpaper function and set current icon ***********************
+        changeWallpaper(data.current.weather_code, visibilityKm, isDay);
+        // prayer time function **********************************************
+        fetchPrayerTimes(lat, lon);
+
+        const currentIcon = getWeatherIcon(data.current.weather_code, isDay);
+        skycons.set("current-weather-icon", currentIcon);
+        skycons.play();
+        // loadingOverlay.classList.add("hidden-loading-overlay");
+      })
+      .catch((error) => {
+        console.error("Weather API Error:", error);
+      });
   }
 
   async function getCityFromIP() {
@@ -613,4 +652,3 @@ document.addEventListener("DOMContentLoaded", function () {
 setInterval(function () {
   window.location.reload(true);
 }, 3600000);
-
