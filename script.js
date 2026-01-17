@@ -57,15 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let wallpaperSrc = "";
 
-    if (visibilityKm !== undefined) {
-      if (visibilityKm <= 10) {
-        if (visibilityKm <= 1) {
-          wallpaperSrc = "img/wallpapers/Sandstorm.jpg";
-        } else if (visibilityKm > 1 && visibilityKm <= 5) {
-          wallpaperSrc = "img/wallpapers/dusty.jpg";
-        } else if (visibilityKm > 5 && visibilityKm <= 10) {
-          wallpaperSrc = "img/wallpapers/haze.jpg";
-        }
+    if (visibilityKm !== undefined && visibilityKm <= 10) {
+      if (visibilityKm <= 1) {
+        wallpaperSrc = "img/wallpapers/Sandstorm.jpg";
+      } else if (visibilityKm > 1 && visibilityKm <= 5) {
+        wallpaperSrc = "img/wallpapers/dusty.jpg";
+      } else if (visibilityKm > 5 && visibilityKm <= 10) {
+        wallpaperSrc = "img/wallpapers/haze.jpg";
       }
     }
 
@@ -125,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
           break;
       }
     }
-
+    // transition fade out
     if (
       currentWallpaper &&
       currentWallpaper.src.includes(wallpaperSrc.split("/").pop())
@@ -392,7 +390,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentIcon = getWeatherIcon(data.current.weather_code, isDay);
         skycons.set("current-weather-icon", currentIcon);
         skycons.play();
-        // loadingOverlay.classList.add("hidden-loading-overlay");
       })
       .catch((error) => {
         console.error("Weather API Error:", error);
