@@ -306,6 +306,13 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.city,
+.time,
+#temperature,
+.apparent-temperature {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.192), 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
 .weather-temp {
   flex-direction: column;
 }
