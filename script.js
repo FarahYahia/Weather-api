@@ -59,7 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (visibilityKm !== undefined && visibilityKm <= 10) {
       if (visibilityKm <= 1) {
-        wallpaperSrc = "img/wallpapers/Sandstorm.jpg";
+        wallpaperSrc = [
+          "img/wallpapers/Sandstorm.jpg",
+          "img/wallpapers/Sandstorm-2.jpg",
+        ];
       } else if (visibilityKm > 1 && visibilityKm <= 5) {
         wallpaperSrc = "img/wallpapers/dusty.jpg";
       } else if (visibilityKm > 5 && visibilityKm <= 10) {
@@ -71,14 +74,22 @@ document.addEventListener("DOMContentLoaded", function () {
       switch (weatherCode) {
         case 0:
           wallpaperSrc = isDay
-            ? "img/wallpapers/clear.jpg"
-            : "img/wallpapers/clear-night.jpg";
+            ? [
+                "img/wallpapers/clear.jpg",
+                "img/wallpapers/clear-2.jpg",
+                "img/wallpapers/clear-3.jpg",
+              ]
+            : ["img/wallpapers/clear-night.jpg"];
           break;
         case 1:
         case 2:
         case 3:
           wallpaperSrc = isDay
-            ? "img/wallpapers/cloudy.jpg"
+            ? [
+                "img/wallpapers/cloudy.jpg",
+                "img/wallpapers/cloudy-2.jpg",
+                "img/wallpapers/cloudy-3.jpg",
+              ]
             : "img/wallpapers/cloudy-night.jpg";
           break;
         case 45:
@@ -88,7 +99,11 @@ document.addEventListener("DOMContentLoaded", function () {
         case 51:
         case 53:
         case 55:
-          wallpaperSrc = "img/wallpapers/drizzle.jpg";
+          wallpaperSrc = [
+            "img/wallpapers/drizzle.jpg",
+            "img/wallpapers/drizzle-2.jpg",
+            "img/wallpapers/drizzle-3.jpg",
+          ];
           break;
         case 61:
         case 63:
@@ -116,23 +131,30 @@ document.addEventListener("DOMContentLoaded", function () {
         case 95:
         case 96:
         case 99:
-          wallpaperSrc = "img/wallpapers/thunderstorm.jpg";
+          wallpaperSrc = [
+            "img/wallpapers/thunderstorm.jpg",
+            "img/wallpapers/thunderstorm-2.jpg",
+            "img/wallpapers/thunderstorm-3.jpg",
+          ];
           break;
         default:
           wallpaperSrc = "img/wallpapers/default.jpg";
           break;
       }
     }
+    const randomIndex = Math.floor(Math.random() * wallpaperSrc.length);
+    const wallpaperOption = wallpaperSrc[randomIndex];
+
     // transition fade out
     if (
       currentWallpaper &&
-      currentWallpaper.src.includes(wallpaperSrc.split("/").pop())
+      currentWallpaper.src.includes(wallpaperOption.split("/").pop())
     ) {
       return;
     }
 
     const newWallpaper = document.createElement("img");
-    newWallpaper.src = wallpaperSrc;
+    newWallpaper.src = wallpaperOption;
     newWallpaper.style.cssText = `
         position: absolute; 
         top: 0;
@@ -616,7 +638,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   });
 
-  // Handle search clicks )))))))))))))))))))))))))))00
+  // Handle search clicks )))))))))))))))))))))))))))
   searchBtn.addEventListener("click", async function () {
     const query = searchInput.value.trim();
     if (query.length >= 2) {
@@ -643,7 +665,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-// ((((((((((((((((((((((((()))))))))))))))))))))))))
+// ((((((((((((((((((((((((())))))))))))))))))))))))) END
 
 // Auto refresh page every hour
 setInterval(function () {
