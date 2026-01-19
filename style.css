@@ -268,7 +268,7 @@ button {
   border-radius: 35px;
   padding: 1% 1.5%;
   color: white;
-  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+  font-size: clamp(1.3rem, 1.7vw, 1.5rem);
   box-sizing: border-box;
 }
 .row {
@@ -290,7 +290,7 @@ button {
   width: 60%;
   height: 100%;
   color: white;
-  padding: 2%;
+  padding: 1%;
 }
 .time,
 .city,
@@ -301,7 +301,7 @@ button {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  font-size: clamp(1.2rem, 1.6vw, 1.6rem);
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -309,13 +309,15 @@ button {
 .city,
 .time,
 #temperature,
-.apparent-temperature {
+.apparent-temperature,
+.weather-details {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.192), 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 .weather-temp {
   flex-direction: column;
 }
+
 .current-weather-icon {
   display: block;
   margin: 0 auto;
