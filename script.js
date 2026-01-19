@@ -287,24 +287,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const timings = data.data.timings;
         document.getElementById("Fajr").innerHTML = timeFormat(timings.Fajr);
         document.getElementById("Sunrise").innerHTML = timeFormat(
-          timings.Sunrise
+          timings.Sunrise,
         );
         document.getElementById("Dhuhr").innerHTML = timeFormat(timings.Dhuhr);
         document.getElementById("Asr").innerHTML = timeFormat(timings.Asr);
         document.getElementById("Maghrib").innerHTML = timeFormat(
-          timings.Maghrib
+          timings.Maghrib,
         );
         document.getElementById("Isha").innerHTML = timeFormat(timings.Isha);
         document.getElementById("Midnight").innerHTML = timeFormat(
-          timings.Midnight
+          timings.Midnight,
         );
       }
 
       if (data.code === 200 && data.data && data.data.date.hijri) {
         const hijri = data.data.date.hijri;
-        document.getElementById(
-          "hijriDate"
-        ).innerHTML = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
+        document.getElementById("hijriDate").innerHTML =
+          `${hijri.day} ${hijri.month.en} ${hijri.year}`;
       }
     } catch (error) {
       console.error("Prayer Times API Error:", error);
@@ -319,54 +318,44 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(async (data) => {
         const isDay = data.current.is_day;
 
-        document.getElementById(
-          "temperature"
-        ).innerHTML = `${data.current.temperature_2m} °C`;
-        document.getElementById(
-          "apparent-value"
-        ).innerHTML = ` ${data.current.apparent_temperature} °C`;
-        document.getElementById(
-          "wind-value"
-        ).innerHTML = `${data.current.wind_speed_10m} km/h`;
-        document.getElementById(
-          "humidity-value"
-        ).innerHTML = `${data.current.relative_humidity_2m} %`;
+        document.getElementById("temperature").innerHTML =
+          `${data.current.temperature_2m} °C`;
+        document.getElementById("apparent-value").innerHTML =
+          ` ${data.current.apparent_temperature} °C`;
+        document.getElementById("wind-value").innerHTML =
+          `${data.current.wind_speed_10m} km/h`;
+        document.getElementById("humidity-value").innerHTML =
+          `${data.current.relative_humidity_2m} %`;
         const visibilityKm = Math.round(data.hourly.visibility[0] / 1000);
-        document.getElementById(
-          "visibility-value"
-        ).innerHTML = `${visibilityKm} km`;
-        document.getElementById(
-          "pressure-value"
-        ).innerHTML = `${data.current.pressure_msl} hPa`;
+        document.getElementById("visibility-value").innerHTML =
+          `${visibilityKm} km`;
+        document.getElementById("pressure-value").innerHTML =
+          `${data.current.pressure_msl} hPa`;
 
         // Update hourly waether data***********
         const hourly = [0, 3, 6, 9, 12, 15, 18, 21];
         hourly.forEach((hour, index) => {
           const formatHour = timeFormat(`${hour}:00`);
           document.getElementById(`time-${index}`).innerHTML = `${formatHour}`;
-          document.getElementById(
-            `temp-${index}`
-          ).innerHTML = `${data.hourly.temperature_2m[hour]}°C`;
+          document.getElementById(`temp-${index}`).innerHTML =
+            `${data.hourly.temperature_2m[hour]}°C`;
           const hourIsDay = hour >= 6 && hour < 18;
 
           const hourlyIcon = getWeatherIcon(
             data.hourly.weather_code[hour],
-            hourIsDay
+            hourIsDay,
           );
           skycons.set(`hourly-icon${index}`, hourlyIcon);
         });
 
         // Update daily temperatures*******
         for (let i = 1; i <= 5; i++) {
-          document.getElementById(
-            `day-${i}-high`
-          ).innerHTML = `${data.daily.temperature_2m_max[i]} °C`;
-          document.getElementById(
-            `day-${i}-low`
-          ).innerHTML = `${data.daily.temperature_2m_min[i]} °C`;
-          document.getElementById(
-            `ppm${i}`
-          ).innerHTML = `${data.daily.precipitation_probability_max[i]} %`;
+          document.getElementById(`day-${i}-high`).innerHTML =
+            `${data.daily.temperature_2m_max[i]} °C`;
+          document.getElementById(`day-${i}-low`).innerHTML =
+            `${data.daily.temperature_2m_min[i]} °C`;
+          document.getElementById(`ppm${i}`).innerHTML =
+            `${data.daily.precipitation_probability_max[i]} %`;
         }
 
         // Update dates *****
@@ -400,7 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
           updateCityInUI(
             detectedLocation.name,
             detectedLocation.country,
-            detectedLocation.admin1
+            detectedLocation.admin1,
           );
         }
 
@@ -420,15 +409,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function getCityFromIP() {
     try {
-      const response = await fetch("https://ipapi.co/json/");
+      const response = await fetch(
+        "https://api.bigdatacloud.net/data/reverse-geocode-client",
+      );
       const data = await response.json();
-
       if (data && data.latitude && data.longitude) {
         return {
-          city: data.city || "Unknown",
+          city: data.city || data.locality || "Unknown",
           lat: data.latitude,
           lon: data.longitude,
-          country: data.country_name || "",
+          country: data.countryName || "",
         };
       }
 
@@ -513,7 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         function (error) {
           console.log(
-            "Location access denied, loading your default location... "
+            "Location access denied, loading your default location... ",
           );
           fetchWeatherData(currentLat, currentLon, true);
         },
@@ -522,7 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 0,
-        }
+        },
       );
     } else {
       // IF the Browser doesn't support geolocation
@@ -549,7 +539,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-        cityName
+        cityName,
       )}&count=10&language=en&format=json`;
 
       const response = await fetch(geoUrl);
@@ -581,10 +571,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }')">
           <strong>${city.name}</strong>
           <span>${city.country || ""} ${
-          city.admin1 ? ", " + city.admin1 : ""
-        }</span>
+            city.admin1 ? ", " + city.admin1 : ""
+          }</span>
         </div>
-      `
+      `,
       )
       .join("");
 
