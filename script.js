@@ -79,7 +79,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 "img/wallpapers/clear-2.jpg",
                 "img/wallpapers/clear-3.jpg",
               ]
-            : ["img/wallpapers/clear-night.jpg"];
+            : [
+                "img/wallpapers/clear-night.jpg",
+                "img/wallpapers/clear-night-2.jpg",
+              ];
           break;
         case 1:
         case 2:
