@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           wallpaperContainer.removeChild(currentWallpaper);
         }
-      }, 850);
+      }, 450);
     };
 
     newWallpaper.onerror = function () {
